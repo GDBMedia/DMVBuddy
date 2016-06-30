@@ -18,7 +18,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class GooglePlacesService {
-    public static void findGod(Callback callback) {
+    public static void findGod(String latitude, String longitude,  Callback callback) {
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();

@@ -1,7 +1,12 @@
 package com.example.guest.apitest;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,16 +25,38 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.location.LocationServices;
+
+import android.Manifest;
+
+public class MainActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener{
+
     public static final String TAG = MainActivity.class.getSimpleName();
     public ArrayList<Church> mChurches = new ArrayList<>();
+    private GoogleApiClient mGoogleApiClient;
+    private final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
+    private Location mLastLocation;
+    private String mLatitudeText;
+    private String mLongitudeText;
+
     @Bind(R.id.listView) ListView mListView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        getGod();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
+                    PERMISSION_ACCESS_COARSE_LOCATION);
+        }
+
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -38,11 +65,49 @@ public class MainActivity extends AppCompatActivity {
                     .addApi(LocationServices.API)
                     .build();
         }
+        getGod();
+
+}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mGoogleApiClient.connect();
+
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+            if (mLastLocation != null) {
+                mLatitudeText = String.valueOf(mLastLocation.getLatitude());
+                mLongitudeText = String.valueOf(mLastLocation.getLongitude());
+
+                Toast.makeText(this, mLongitudeText+"hey", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Toast.makeText(this, "suspended", Toast.LENGTH_LONG).show();
+    }
+
 
     private void getGod() {
         final GooglePlacesService googlePlacesService = new GooglePlacesService();
-        googlePlacesService.findGod(new Callback() {
+        googlePlacesService.findGod(mLatitudeText, mLongitudeText, new Callback() {
 
             @Override
             public void onFailure(Call call, IOException e) {
@@ -76,20 +141,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void generateNoteOnSD(Context context, String sFileName, String sBody) {
-        try {
-            File root = new File(Environment.getExternalStorageDirectory(), "Music");
-            if (!root.exists()) {
-                root.mkdirs();
-            }
-            File gpxfile = new File(root, sFileName);
-            FileWriter writer = new FileWriter(gpxfile);
-            writer.append(sBody);
-            writer.flush();
-            writer.close();
-            Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_ACCESS_COARSE_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // All good!
+                } else {
+                    Toast.makeText(this, "Need your location!", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
         }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
