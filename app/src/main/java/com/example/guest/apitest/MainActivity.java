@@ -3,6 +3,8 @@ package com.example.guest.apitest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     private Location mLastLocation;
     private String mLatitudeText;
     private String mLongitudeText;
+    private LocationManager mLocationManager;
 
     @Bind(R.id.listView) ListView mListView;
 
@@ -56,6 +59,11 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
                     PERMISSION_ACCESS_COARSE_LOCATION);
         }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                    PERMISSION_ACCESS_COARSE_LOCATION);
+        }
 
 
         if (mGoogleApiClient == null) {
@@ -65,9 +73,39 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                     .addApi(LocationServices.API)
                     .build();
         }
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
+                1000, mLocationListener);
         getGod();
 
 }
+    private final LocationListener mLocationListener = new LocationListener() {
+
+
+        @Override
+        public void onLocationChanged(final Location location) {
+
+
+
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+            Toast.makeText(MainActivity.this, s+" hey", Toast.LENGTH_LONG).show();
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
     @Override
     protected void onResume() {
         super.onResume();
@@ -86,10 +124,10 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     public void onConnected(Bundle connectionHint) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-            if (mLastLocation != null) {
-                mLatitudeText = String.valueOf(mLastLocation.getLatitude());
-                mLongitudeText = String.valueOf(mLastLocation.getLongitude());
+//            Toast.makeText(this, mGoogleApiClient+"hey", Toast.LENGTH_LONG).show();
+            if (location != null) {
+                mLatitudeText = String.valueOf(location.getLatitude());
+                mLongitudeText = String.valueOf(location.getLongitude());
 
                 Toast.makeText(this, mLongitudeText+"hey", Toast.LENGTH_SHORT).show();
 
