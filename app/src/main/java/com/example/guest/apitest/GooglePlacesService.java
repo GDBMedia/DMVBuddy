@@ -18,16 +18,17 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class GooglePlacesService {
-    public static void findGod(String latitude, String longitude,  Callback callback) {
+    public static void findGod( String longitude, String latitude,  Callback callback) {
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.GOOGLE_BASE_URL).newBuilder();
-        urlBuilder.addQueryParameter(Constants.LOCATIONP, Constants.LOCATION)
+        urlBuilder.addQueryParameter(Constants.LOCATIONP,  latitude+ "," +  longitude)
                   .addQueryParameter(Constants.KEYWORDP, Constants.KEYWORD)
                   .addQueryParameter(Constants.RANKBYP, Constants.RANKBY)
-//                  .addQueryParameter("pagetoken", "CoQC_QAAANmfsLgGkYXoKhHGBHG_leKG49nnaSBNfyo7LL2IGi6i4wlmnPLiwFmNi_6m_YosXIrk05zDC-ylwnkeFktti0Vc-Jz6rZKg34wUZ7U4o_KaBkJ1ENP48KVCYCM_Nxiy73rtlG5Eozt8M4OikaOyNK8qrnxDLdNQ6Z1li2j2WIh5yy5H4u4x8DbwXI3dnj5mV2pCCptr9botHo46SW7KPRbWFvAISFXf2KUs_TnWHmX1j9wPikWspK16D1r9IQqxHjWOQKKjmrKWwxCFUuEIU9varBa8VoLLRbF7cnsSIqpLPnW_vYXhIY-_WwFTRd0VgemXymdWvF---pTlBTDEE8USEOr1zc0MwSYinM8PJBkmxXEaFFxo43LUHP_Sv8LaSN2T0Pq1jmiQ")
+                  .addQueryParameter("type", "local_government_office")
+//                 .addQueryParameter("pagetoken", "CoQC_QAAANmfsLgGkYXoKhHGBHG_leKG49nnaSBNfyo7LL2IGi6i4wlmnPLiwFmNi_6m_YosXIrk05zDC-ylwnkeFktti0Vc-Jz6rZKg34wUZ7U4o_KaBkJ1ENP48KVCYCM_Nxiy73rtlG5Eozt8M4OikaOyNK8qrnxDLdNQ6Z1li2j2WIh5yy5H4u4x8DbwXI3dnj5mV2pCCptr9botHo46SW7KPRbWFvAISFXf2KUs_TnWHmX1j9wPikWspK16D1r9IQqxHjWOQKKjmrKWwxCFUuEIU9varBa8VoLLRbF7cnsSIqpLPnW_vYXhIY-_WwFTRd0VgemXymdWvF---pTlBTDEE8USEOr1zc0MwSYinM8PJBkmxXEaFFxo43LUHP_Sv8LaSN2T0Pq1jmiQ")
                   .addQueryParameter(Constants.KEYP, Constants.KEY);
         String url = urlBuilder.build().toString();
 

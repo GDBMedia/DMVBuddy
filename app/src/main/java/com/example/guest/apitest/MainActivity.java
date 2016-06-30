@@ -1,5 +1,6 @@
 package com.example.guest.apitest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,6 +12,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -20,6 +23,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,18 +39,13 @@ import com.google.android.gms.location.LocationServices;
 
 import android.Manifest;
 
-public class MainActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener{
+public class MainActivity extends Activity implements ConnectionCallbacks, OnConnectionFailedListener{
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public ArrayList<Church> mChurches = new ArrayList<>();
+    public List<Church> mChurches = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
-    private Location mLastLocation;
-    private String mLatitudeText;
-    private String mLongitudeText;
-    private LocationManager mLocationManager;
-
-    @Bind(R.id.listView) ListView mListView;
+    private RecyclerView rv;
 
 
     @Override
@@ -54,11 +53,12 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
-                    PERMISSION_ACCESS_COARSE_LOCATION);
-        }
+        rv=(RecyclerView)findViewById(R.id.rv);
+
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setLayoutManager(llm);
+        rv.setHasFixedSize(true);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
@@ -73,39 +73,8 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                     .addApi(LocationServices.API)
                     .build();
         }
-        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
-                1000, mLocationListener);
-        getGod();
 
 }
-    private final LocationListener mLocationListener = new LocationListener() {
-
-
-        @Override
-        public void onLocationChanged(final Location location) {
-
-
-
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-            Toast.makeText(MainActivity.this, s+" hey", Toast.LENGTH_LONG).show();
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
-    };
     @Override
     protected void onResume() {
         super.onResume();
@@ -124,12 +93,12 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     public void onConnected(Bundle connectionHint) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-//            Toast.makeText(this, mGoogleApiClient+"hey", Toast.LENGTH_LONG).show();
             if (location != null) {
-                mLatitudeText = String.valueOf(location.getLatitude());
-                mLongitudeText = String.valueOf(location.getLongitude());
+                String latitude = String.valueOf(location.getLatitude());
+                String longitude = String.valueOf(location.getLongitude());
+                Toast.makeText(this, longitude+","+latitude, Toast.LENGTH_LONG).show();
+                getGod(longitude, latitude);
 
-                Toast.makeText(this, mLongitudeText+"hey", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -143,9 +112,9 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     }
 
 
-    private void getGod() {
+    private void getGod(String longitude, String latitude) {
         final GooglePlacesService googlePlacesService = new GooglePlacesService();
-        googlePlacesService.findGod(mLatitudeText, mLongitudeText, new Callback() {
+        googlePlacesService.findGod(longitude, latitude, new Callback() {
 
             @Override
             public void onFailure(Call call, IOException e) {
@@ -159,14 +128,9 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                     @Override
                     public void run() {
 
-                        String[] restaurantNames = new String[mChurches.size()];
-                        for (int i = 0; i < restaurantNames.length; i++) {
-                            restaurantNames[i] = mChurches.get(i).getName();
-                        }
+                        RVAdapter adapter = new RVAdapter(mChurches);
+                        rv.setAdapter(adapter);
 
-                        ArrayAdapter adapter = new ArrayAdapter(MainActivity.this,
-                                android.R.layout.simple_list_item_1, restaurantNames);
-                        mListView.setAdapter(adapter);
 
                         for (Church restaurant : mChurches) {
                             Log.d(TAG, "Name: " + restaurant.getName());
