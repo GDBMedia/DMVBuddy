@@ -53,7 +53,9 @@ public class GooglePlacesService {
                     String name = dmvJSON.getString("name");
                     double rating = dmvJSON.optDouble("rating", 0);
                     String vicinity = dmvJSON.getString("vicinity");
-                    Dmv dmv = new Dmv(name, rating, vicinity);
+                    String lat = dmvJSON.getJSONObject("geometry").getJSONObject("location").getString("lat");
+                    String lng = dmvJSON.getJSONObject("geometry").getJSONObject("location").getString("lng");
+                    Dmv dmv = new Dmv(name, rating, vicinity, lat, lng);
                     dmvs.add(dmv);
                 }
             }

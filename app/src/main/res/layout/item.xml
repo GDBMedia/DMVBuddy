@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/dmv_name"
+            android:textColor="@color/accent"
             android:textSize="30sp"
             android:padding="8dp"
             />
@@ -37,6 +38,7 @@
             android:id="@+id/dmv_vicinity"
             android:layout_below="@+id/dmv_rating"
             android:padding="8dp"
+            android:textColor="@color/primary"
             />
 
     </RelativeLayout>

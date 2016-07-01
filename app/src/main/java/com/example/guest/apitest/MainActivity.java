@@ -90,6 +90,8 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
                 getDmvs(longitude, latitude);
 
 
+            }else{
+                Toast.makeText(this, "Cant Find Location", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -122,10 +124,12 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
                         rv.setAdapter(adapter);
 
 
-                        for (Dmv restaurant : mDmvs) {
-                            Log.d(TAG, "Name: " + restaurant.getName());
-                            Log.d(TAG, "Vicinity: " + restaurant.getVicinity());
-                            Log.d(TAG, "Rating: " + Double.toString(restaurant.getRating()));
+                        for (Dmv dmv : mDmvs) {
+                            Log.d(TAG, "Name: " + dmv.getName());
+                            Log.d(TAG, "Vicinity: " + dmv.getVicinity());
+                            Log.d(TAG, "Rating: " + Double.toString(dmv.getRating()));
+                            Log.d(TAG, "Vicinity: " + dmv.getLat());
+                            Log.d(TAG, "Vicinity: " + dmv.getLng());
                         }
                     }
                 });

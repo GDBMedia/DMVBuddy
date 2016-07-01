@@ -5,9 +5,8 @@ package com.example.guest.apitest;
  */
 public class Constants {
     public static final String GOOGLE_BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-    public static final String LOCATION = "45.520671,-122.677554";
     public static final String LOCATIONP = "location";
-    public static final String KEYWORD = "dmv";
+    public static final String KEYWORD = "Department of Motor Vehicles";
     public static final String KEYWORDP = "keyword";
     public static final String RANKBY = "distance";
     public static final String RANKBYP = "rankby";

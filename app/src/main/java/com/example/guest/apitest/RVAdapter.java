@@ -51,7 +51,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DmvViewHolder> {
     @Override
     public void onBindViewHolder(DmvViewHolder dmvViewHolder, int i) {
         dmvViewHolder.dmvName.setText(dmvs.get(i).getName());
-        dmvViewHolder.dmvRating.setText(Double.toString(dmvs.get(i).getRating()));
+        dmvViewHolder.dmvRating.setText("Rating: " + Double.toString(dmvs.get(i).getRating()));
         dmvViewHolder.dmvVicinity.setText(dmvs.get(i).getVicinity());
     }
 
