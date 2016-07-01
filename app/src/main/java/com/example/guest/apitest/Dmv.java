@@ -3,13 +3,13 @@ package com.example.guest.apitest;
 /**
  * Created by Guest on 6/29/16.
  */
-public class Church {
+public class Dmv {
 
     private String mName;
     private double mRating;
     private String mVicinity;
 
-    public Church(String name, double rating, String vicinity){
+    public Dmv(String name, double rating, String vicinity){
         this.mName = name;
         this.mRating = rating;
         this.mVicinity = vicinity;

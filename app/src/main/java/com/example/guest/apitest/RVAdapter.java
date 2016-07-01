@@ -8,33 +8,32 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChurchViewHolder> {
+public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DmvViewHolder> {
 
-    public static class ChurchViewHolder extends RecyclerView.ViewHolder {
+    public static class DmvViewHolder extends RecyclerView.ViewHolder {
 
         CardView cv;
-        TextView churchName;
-        TextView churchRating;
-        TextView churchVicinity;
+        TextView dmvName;
+        TextView dmvRating;
+        TextView dmvVicinity;
 
-        ChurchViewHolder(View itemView) {
+        DmvViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
-            churchName = (TextView)itemView.findViewById(R.id.church_name);
-            churchRating = (TextView)itemView.findViewById(R.id.church_rating);
-            churchVicinity = (TextView)itemView.findViewById(R.id.church_vicinity);
+            dmvName = (TextView)itemView.findViewById(R.id.dmv_name);
+            dmvRating = (TextView)itemView.findViewById(R.id.dmv_rating);
+            dmvVicinity = (TextView)itemView.findViewById(R.id.dmv_vicinity);
         }
     }
 
-    List<Church> churches;
+    List<Dmv> dmvs;
 
-    RVAdapter(List<Church> churches){
-        this.churches = churches;
+    RVAdapter(List<Dmv> dmvs){
+        this.dmvs = dmvs;
     }
 
     @Override
@@ -43,22 +42,22 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChurchViewHolder> 
     }
 
     @Override
-    public ChurchViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public DmvViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item, viewGroup, false);
-        ChurchViewHolder pvh = new ChurchViewHolder(v);
-        return pvh;
+        DmvViewHolder dvh = new DmvViewHolder(v);
+        return dvh;
     }
 
     @Override
-    public void onBindViewHolder(ChurchViewHolder personViewHolder, int i) {
-        personViewHolder.churchName.setText(churches.get(i).getName());
-        personViewHolder.churchRating.setText(Double.toString(churches.get(i).getRating()));
-        personViewHolder.churchVicinity.setText(churches.get(i).getVicinity());
+    public void onBindViewHolder(DmvViewHolder dmvViewHolder, int i) {
+        dmvViewHolder.dmvName.setText(dmvs.get(i).getName());
+        dmvViewHolder.dmvRating.setText(Double.toString(dmvs.get(i).getRating()));
+        dmvViewHolder.dmvVicinity.setText(dmvs.get(i).getVicinity());
     }
 
     @Override
     public int getItemCount() {
-        return churches.size();
+        return dmvs.size();
     }
 }
 

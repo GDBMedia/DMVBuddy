@@ -18,7 +18,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class GooglePlacesService {
-    public static void findGod( String longitude, String latitude,  Callback callback) {
+    public static void findDmvs(String longitude, String latitude, Callback callback) {
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();
@@ -40,21 +40,21 @@ public class GooglePlacesService {
         call.enqueue(callback);
     }
 
-    public ArrayList<Church> processResults(Response response) {
-        ArrayList<Church> churches = new ArrayList<>();
+    public ArrayList<Dmv> processResults(Response response) {
+        ArrayList<Dmv> dmvs = new ArrayList<>();
 
         try {
             String jsonData = response.body().string();
             if (response.isSuccessful()) {
-                JSONObject yelpJSON = new JSONObject(jsonData);
-                JSONArray placesJSON = yelpJSON.getJSONArray("results");
+                JSONObject googleJSON = new JSONObject(jsonData);
+                JSONArray placesJSON = googleJSON.getJSONArray("results");
                 for (int i = 0; i < placesJSON.length(); i++) {
-                    JSONObject churchJSON = placesJSON.getJSONObject(i);
-                    String name = churchJSON.getString("name");
-                    double rating = churchJSON.optDouble("rating", 0);
-                    String vicinity = churchJSON.getString("vicinity");
-                    Church church = new Church(name, rating, vicinity);
-                    churches.add(church);
+                    JSONObject dmvJSON = placesJSON.getJSONObject(i);
+                    String name = dmvJSON.getString("name");
+                    double rating = dmvJSON.optDouble("rating", 0);
+                    String vicinity = dmvJSON.getString("vicinity");
+                    Dmv dmv = new Dmv(name, rating, vicinity);
+                    dmvs.add(dmv);
                 }
             }
         } catch (IOException e) {
@@ -62,6 +62,6 @@ public class GooglePlacesService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return churches;
+        return dmvs;
     }
 }

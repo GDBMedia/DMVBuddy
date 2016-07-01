@@ -1,31 +1,21 @@
 package com.example.guest.apitest;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -42,7 +32,7 @@ import android.Manifest;
 public class MainActivity extends Activity implements ConnectionCallbacks, OnConnectionFailedListener{
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public List<Church> mChurches = new ArrayList<>();
+    public List<Dmv> mDmvs = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
     private RecyclerView rv;
@@ -97,7 +87,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
                 String latitude = String.valueOf(location.getLatitude());
                 String longitude = String.valueOf(location.getLongitude());
                 Toast.makeText(this, longitude+","+latitude, Toast.LENGTH_LONG).show();
-                getGod(longitude, latitude);
+                getDmvs(longitude, latitude);
 
 
             }
@@ -112,9 +102,9 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
     }
 
 
-    private void getGod(String longitude, String latitude) {
+    private void getDmvs(String longitude, String latitude) {
         final GooglePlacesService googlePlacesService = new GooglePlacesService();
-        googlePlacesService.findGod(longitude, latitude, new Callback() {
+        googlePlacesService.findDmvs(longitude, latitude, new Callback() {
 
             @Override
             public void onFailure(Call call, IOException e) {
@@ -123,16 +113,16 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
 
             @Override
             public void onResponse(Call call, Response response){
-                mChurches = googlePlacesService.processResults(response);
+                mDmvs = googlePlacesService.processResults(response);
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
-                        RVAdapter adapter = new RVAdapter(mChurches);
+                        RVAdapter adapter = new RVAdapter(mDmvs);
                         rv.setAdapter(adapter);
 
 
-                        for (Church restaurant : mChurches) {
+                        for (Dmv restaurant : mDmvs) {
                             Log.d(TAG, "Name: " + restaurant.getName());
                             Log.d(TAG, "Vicinity: " + restaurant.getVicinity());
                             Log.d(TAG, "Rating: " + Double.toString(restaurant.getRating()));
@@ -159,6 +149,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(this, "failed", Toast.LENGTH_LONG).show();
 
     }
 }

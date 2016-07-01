@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/church_name"
+            android:id="@+id/dmv_name"
             android:textSize="30sp"
             android:padding="8dp"
             />
@@ -25,8 +25,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/church_rating"
-            android:layout_below="@+id/church_name"
+            android:id="@+id/dmv_rating"
+            android:layout_below="@+id/dmv_name"
             android:textSize="20sp"
             android:padding="8dp"
             />
@@ -34,8 +34,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/church_vicinity"
-            android:layout_below="@+id/church_rating"
+            android:id="@+id/dmv_vicinity"
+            android:layout_below="@+id/dmv_rating"
             android:padding="8dp"
             />
 
