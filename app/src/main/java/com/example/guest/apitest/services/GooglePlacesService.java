@@ -1,8 +1,11 @@
-package com.example.guest.apitest;
+package com.example.guest.apitest.services;
 
 /**
  * Created by Guest on 6/29/16.
  */
+import com.example.guest.apitest.Constants;
+import com.example.guest.apitest.models.Dmv;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

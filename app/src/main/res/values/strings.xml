@@ -3,4 +3,7 @@
     <string name="user_hint">Username or Email</string>
     <string name="pass_hint">Password</string>
     <string name="signin">Sign In</string>
+    <string name="update">Update Wait Time</string>
+    <string name="number_pulled">Number Pulled</string>
+    <string name="number_serving">Number Serving</string>
 </resources>

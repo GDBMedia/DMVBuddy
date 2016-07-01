@@ -12,6 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/card"
 
         >
         <TextView
@@ -21,7 +22,7 @@
             android:textColor="@color/accent"
             android:textSize="30sp"
             android:padding="8dp"
-            />
+        />
 
         <TextView
             android:layout_width="match_parent"
@@ -33,12 +34,24 @@
             />
 
         <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dmv_vicinity"
+        android:layout_below="@+id/dmv_rating"
+        android:padding="8dp"
+        android:textColor="@color/primary"
+        />
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/dmv_vicinity"
-            android:layout_below="@+id/dmv_rating"
+            android:id="@+id/update"
+            android:text="@string/update"
+            android:layout_toEndOf="@+id/dmv_vicinity"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:padding="8dp"
-            android:textColor="@color/primary"
+            android:background="?android:attr/selectableItemBackground"
+            android:textColor="@color/accent"
             />
 
     </RelativeLayout>

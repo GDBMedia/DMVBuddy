@@ -1,33 +1,41 @@
-package com.example.guest.apitest;
+package com.example.guest.apitest.ui;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.guest.apitest.R;
+import com.example.guest.apitest.adapters.RVAdapter;
+import com.example.guest.apitest.models.Dmv;
+import com.example.guest.apitest.services.GooglePlacesService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.location.LocationServices;
-
-import android.Manifest;
 
 public class MainActivity extends Activity implements ConnectionCallbacks, OnConnectionFailedListener{
 
@@ -35,7 +43,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
     public List<Dmv> mDmvs = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
-    private RecyclerView rv;
+    @Bind(R.id.rv) RecyclerView rv;
 
 
     @Override
@@ -43,7 +51,6 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        rv=(RecyclerView)findViewById(R.id.rv);
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
@@ -79,9 +86,12 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
         }
     }
 
+
     @Override
     public void onConnected(Bundle connectionHint) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
             Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (location != null) {
                 String latitude = String.valueOf(location.getLatitude());
@@ -122,6 +132,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
 
                         RVAdapter adapter = new RVAdapter(mDmvs);
                         rv.setAdapter(adapter);
+
 
 
                         for (Dmv dmv : mDmvs) {
