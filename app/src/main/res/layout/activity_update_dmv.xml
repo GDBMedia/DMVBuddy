@@ -31,6 +31,7 @@
             android:id="@+id/pulled"
             android:layout_height="wrap_content"
             android:hint="@string/number_pulled"
+            android:inputType="number"
             android:textColor="@color/primary_light"/>
 
     </android.support.design.widget.TextInputLayout>
@@ -48,6 +49,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/serving"
             android:hint="@string/number_serving"
+            android:inputType="number"
             android:textColor="@color/primary_light"
             />
 
@@ -57,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/submit"
-        android:text="@string/signin"
+        android:text="@string/submit"
         android:background="@color/primary_light"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>

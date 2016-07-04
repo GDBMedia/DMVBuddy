@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/update"
-            android:text="@string/update"
+            android:drawableEnd="@drawable/ic_update_black_24dp"
             android:layout_toEndOf="@+id/dmv_vicinity"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
