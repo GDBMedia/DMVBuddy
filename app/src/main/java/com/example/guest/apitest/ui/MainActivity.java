@@ -101,6 +101,9 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
 
 
             }else{
+                String latitude = "45.520606";
+                String longitude = "-122.707413";
+                getDmvs(longitude, latitude);
                 Toast.makeText(this, "Cant Find Location", Toast.LENGTH_LONG).show();
             }
 
