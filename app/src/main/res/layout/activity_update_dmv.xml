@@ -3,65 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_dark"
     tools:context="com.example.guest.apitest.ui.UpdateDmv">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/name"
-        android:textColor="@color/primary_light"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textSize="30sp"
-        android:gravity="center_vertical"
-        android:layout_marginTop="20dp"/>
-
-    <android.support.design.widget.TextInputLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/pulledWrapper"
-        android:layout_below="@+id/name"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_height="wrap_content">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:id="@+id/pulled"
-            android:layout_height="wrap_content"
-            android:hint="@string/number_pulled"
-            android:inputType="number"
-            android:textColor="@color/primary_light"/>
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/servingWrapper"
-        android:layout_below="@+id/pulledWrapper"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
-
-        <EditText
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/pagerHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/serving"
-            android:hint="@string/number_serving"
-            android:inputType="number"
-            android:textColor="@color/primary_light"
-            />
+            android:layout_gravity="top"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:textColor="@color/primary_darker"
+            android:background="@color/primary_light"/>
 
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/submit"
-        android:text="@string/submit"
-        android:background="@color/primary_light"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

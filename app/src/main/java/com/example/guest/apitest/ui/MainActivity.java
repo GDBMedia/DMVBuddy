@@ -40,10 +40,13 @@ import okhttp3.Response;
 public class MainActivity extends Activity implements ConnectionCallbacks, OnConnectionFailedListener{
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public List<Dmv> mDmvs = new ArrayList<>();
+    public ArrayList<Dmv> mDmvs = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
     @Bind(R.id.rv) RecyclerView rv;
+    private String mLatitude;
+    private String mLongitude;
+    private String mOrigin;
 
 
     @Override
@@ -73,18 +76,18 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
 
 }
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         mGoogleApiClient.connect();
 
     }
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
-    }
+}
 
 
     @Override
@@ -94,17 +97,15 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
 
             Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (location != null) {
-                String latitude = String.valueOf(location.getLatitude());
-                String longitude = String.valueOf(location.getLongitude());
-                Toast.makeText(this, longitude+","+latitude, Toast.LENGTH_LONG).show();
-                getDmvs(longitude, latitude);
+                mLatitude = String.valueOf(location.getLatitude());
+                mLongitude = String.valueOf(location.getLongitude());
+                getDmvs(mLongitude, mLatitude);
 
 
             }else{
-                String latitude = "45.520606";
-                String longitude = "-122.707413";
-                getDmvs(longitude, latitude);
-                Toast.makeText(this, "Cant Find Location", Toast.LENGTH_LONG).show();
+                mLatitude = "45.520606";
+                mLongitude = "-122.707413";
+                getDmvs(mLongitude, mLatitude);
             }
 
         }
@@ -128,23 +129,14 @@ public class MainActivity extends Activity implements ConnectionCallbacks, OnCon
 
             @Override
             public void onResponse(Call call, Response response){
+                mOrigin = mLatitude + "," +  mLongitude;
                 mDmvs = googlePlacesService.processResults(response);
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
-                        RVAdapter adapter = new RVAdapter(mDmvs);
+                        RVAdapter adapter = new RVAdapter(MainActivity.this, mDmvs, mOrigin);
                         rv.setAdapter(adapter);
-
-
-
-                        for (Dmv dmv : mDmvs) {
-                            Log.d(TAG, "Name: " + dmv.getName());
-                            Log.d(TAG, "Vicinity: " + dmv.getVicinity());
-                            Log.d(TAG, "Rating: " + Double.toString(dmv.getRating()));
-                            Log.d(TAG, "Vicinity: " + dmv.getLat());
-                            Log.d(TAG, "Vicinity: " + dmv.getLng());
-                        }
                     }
                 });
             }

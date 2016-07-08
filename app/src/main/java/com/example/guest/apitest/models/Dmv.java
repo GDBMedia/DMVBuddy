@@ -3,20 +3,23 @@ package com.example.guest.apitest.models;
 /**
  * Created by Guest on 6/29/16.
  */
+import org.parceler.Parcel;
+
+@Parcel
 public class Dmv {
 
     private String mName;
     private double mRating;
     private String mVicinity;
-    private String mLat;
-    private String mLng;
+    private String mLocation;
 
-    public Dmv(String name, double rating, String vicinity,String lat, String lng){
+    public Dmv() {}
+
+    public Dmv(String name, double rating, String vicinity,String location){
         this.mName = name;
         this.mRating = rating;
         this.mVicinity = vicinity;
-        this.mLat = lat;
-        this.mLng = lng;
+        this.mLocation = location;
     }
 
     public String getName() {
@@ -28,10 +31,7 @@ public class Dmv {
     public String getVicinity() {
         return mVicinity;
     }
-    public String getLat() {
-        return mLat;
-    }
-    public String getLng() {
-        return mLng;
+    public String getLocation() {
+        return mLocation;
     }
 }

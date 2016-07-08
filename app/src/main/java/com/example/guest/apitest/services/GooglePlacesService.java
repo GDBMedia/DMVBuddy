@@ -3,8 +3,12 @@ package com.example.guest.apitest.services;
 /**
  * Created by Guest on 6/29/16.
  */
+import android.util.Log;
+
 import com.example.guest.apitest.Constants;
+import com.example.guest.apitest.adapters.RVAdapter;
 import com.example.guest.apitest.models.Dmv;
+import com.example.guest.apitest.ui.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +35,6 @@ public class GooglePlacesService {
                   .addQueryParameter(Constants.KEYWORDP, Constants.KEYWORD)
                   .addQueryParameter(Constants.RANKBYP, Constants.RANKBY)
                   .addQueryParameter("type", "local_government_office")
-//                 .addQueryParameter("pagetoken", "CoQC_QAAANmfsLgGkYXoKhHGBHG_leKG49nnaSBNfyo7LL2IGi6i4wlmnPLiwFmNi_6m_YosXIrk05zDC-ylwnkeFktti0Vc-Jz6rZKg34wUZ7U4o_KaBkJ1ENP48KVCYCM_Nxiy73rtlG5Eozt8M4OikaOyNK8qrnxDLdNQ6Z1li2j2WIh5yy5H4u4x8DbwXI3dnj5mV2pCCptr9botHo46SW7KPRbWFvAISFXf2KUs_TnWHmX1j9wPikWspK16D1r9IQqxHjWOQKKjmrKWwxCFUuEIU9varBa8VoLLRbF7cnsSIqpLPnW_vYXhIY-_WwFTRd0VgemXymdWvF---pTlBTDEE8USEOr1zc0MwSYinM8PJBkmxXEaFFxo43LUHP_Sv8LaSN2T0Pq1jmiQ")
                   .addQueryParameter(Constants.KEYP, Constants.KEY);
         String url = urlBuilder.build().toString();
 
@@ -41,6 +44,46 @@ public class GooglePlacesService {
 
         Call call = client.newCall(request);
         call.enqueue(callback);
+    }
+
+    public static void findDistance(String origin, String destination, Callback callback) {
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .build();
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.GOOGLE_DISTANCE_URL).newBuilder();
+        urlBuilder.addQueryParameter(Constants.ORIGINP, origin)
+                  .addQueryParameter(Constants.DESTINATIONP,destination)
+                  .addQueryParameter(Constants.KEYP, Constants.KEY);
+        String url = urlBuilder.build().toString();
+
+        Request request= new Request.Builder()
+                .url(url)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+    public String[] processTravel(Response response){
+        String[] travelInfo = new String[2];
+        String distance = "";
+        String duration = "";
+        try {
+            String jsonData = response.body().string();
+            if (response.isSuccessful()) {
+                JSONObject googleJSON = new JSONObject(jsonData);
+                JSONArray routesJSON = googleJSON.getJSONArray("routes");
+                distance = routesJSON.getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("text");
+                duration = routesJSON.getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("text");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        travelInfo[0] = distance;
+        travelInfo[1] = duration;
+        return travelInfo;
     }
 
     public ArrayList<Dmv> processResults(Response response) {
@@ -58,8 +101,12 @@ public class GooglePlacesService {
                     String vicinity = dmvJSON.getString("vicinity");
                     String lat = dmvJSON.getJSONObject("geometry").getJSONObject("location").getString("lat");
                     String lng = dmvJSON.getJSONObject("geometry").getJSONObject("location").getString("lng");
-                    Dmv dmv = new Dmv(name, rating, vicinity, lat, lng);
-                    dmvs.add(dmv);
+                    String location = lat + "," + lng;
+                    if(name.contains("DMV") || name.contains("Department of Motor Vehicles")){
+                        Dmv dmv = new Dmv(name, rating,  vicinity, location);
+                        dmvs.add(dmv);
+                    }
+
                 }
             }
         } catch (IOException e) {

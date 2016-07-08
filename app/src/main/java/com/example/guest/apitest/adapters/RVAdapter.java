@@ -18,42 +18,23 @@ import com.example.guest.apitest.models.Dmv;
 import com.example.guest.apitest.ui.MainActivity;
 import com.example.guest.apitest.ui.UpdateDmv;
 
+import org.parceler.Parcels;
+
+import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DmvViewHolder> {
+    private ArrayList<Dmv> mDmvs = new ArrayList<>();
+    private Context mContext;
+    private String mOrigin;
 
-    public static class DmvViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-        CardView cv;
-        TextView dmvName;
-        TextView dmvRating;
-        TextView dmvVicinity;
-        TextView update;
-
-        DmvViewHolder(View itemView) {
-            super(itemView);
-
-            cv = (CardView)itemView.findViewById(R.id.cv);
-            dmvName = (TextView)itemView.findViewById(R.id.dmv_name);
-            dmvRating = (TextView)itemView.findViewById(R.id.dmv_rating);
-            dmvVicinity = (TextView)itemView.findViewById(R.id.dmv_vicinity);
-            update = (TextView)itemView.findViewById(R.id.update);
-            update.setOnClickListener(this);
-
-        }
-
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(view.getContext(), UpdateDmv.class);
-            intent.putExtra("name", dmvName.getText().toString());
-            view.getContext().startActivity(intent);
-        }
-    }
-
-    public List<Dmv> dmvs;
-
-    public RVAdapter(List<Dmv> dmvs){
-        this.dmvs = dmvs;
+    public RVAdapter(Context context, ArrayList<Dmv> dmvs, String origin){
+        this.mDmvs = dmvs;
+        this.mContext = context;
+        this.mOrigin = origin;
     }
 
     @Override
@@ -70,15 +51,40 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DmvViewHolder> {
 
     @Override
     public void onBindViewHolder(DmvViewHolder dmvViewHolder, int i) {
-        dmvViewHolder.dmvName.setText(dmvs.get(i).getName());
-        dmvViewHolder.dmvRating.setText("Rating: " + Double.toString(dmvs.get(i).getRating()));
-        dmvViewHolder.dmvVicinity.setText(dmvs.get(i).getVicinity());
+        dmvViewHolder.dmvName.setText(mDmvs.get(i).getName());
+        dmvViewHolder.dmvRating.setText("Rating: " + Double.toString(mDmvs.get(i).getRating()));
+        dmvViewHolder.dmvVicinity.setText(mDmvs.get(i).getVicinity());
     }
 
 
     @Override
     public int getItemCount() {
-        return dmvs.size();
+        return mDmvs.size();
+    }
+
+    public class DmvViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        @Bind(R.id.cv) CardView cv;
+        @Bind(R.id.dmv_name) TextView dmvName;
+        @Bind(R.id.dmv_rating) TextView dmvRating;
+        @Bind(R.id.dmv_vicinity) TextView dmvVicinity;
+
+        DmvViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            int itemPosition = getLayoutPosition();
+            Intent intent = new Intent(view.getContext(), UpdateDmv.class);
+            intent.putExtra("position", itemPosition + "");
+            intent.putExtra("dmvs", Parcels.wrap(mDmvs));
+            intent.putExtra("origin", mOrigin);
+            mContext.startActivity(intent);
+        }
     }
 }
 

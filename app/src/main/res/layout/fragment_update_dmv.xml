@@ -1,0 +1,110 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.guest.apitest.ui.UpdateDmvFragment">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primary_dark">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/primary_dark"
+            tools:context="com.example.guest.apitest.ui.UpdateDmv">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/name"
+                android:textColor="@color/primary_light"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="30sp"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/address"
+                android:textColor="@color/primary_light"
+                android:layout_below="@+id/name"
+                android:layout_centerHorizontal="true"
+                android:textSize="20sp"
+                android:gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/travel"
+                android:textColor="@color/primary_light"
+                android:layout_below="@+id/address"
+                android:layout_centerHorizontal="true"
+                android:textSize="15sp"
+                android:gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/pulledWrapper"
+                android:layout_below="@+id/travel"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:id="@+id/pulled"
+                    android:maxLines="1"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/number_pulled"
+                    android:inputType="number"
+                    android:textColor="@color/primary_light"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/servingWrapper"
+                android:layout_below="@+id/pulledWrapper"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/serving"
+                    android:maxLines="1"
+                    android:hint="@string/number_serving"
+                    android:inputType="number"
+                    android:textColor="@color/primary_light"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/submit"
+                android:text="@string/submit"
+                android:background="@color/primary_light"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"/>
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+
+</FrameLayout>
