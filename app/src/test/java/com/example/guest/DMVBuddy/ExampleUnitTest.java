@@ -1,4 +1,4 @@
-package com.example.guest.apitest;
+package com.example.guest.DMVBuddy;
 
 import org.junit.Test;
 

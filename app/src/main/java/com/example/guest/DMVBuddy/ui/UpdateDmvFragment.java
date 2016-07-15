@@ -1,6 +1,5 @@
-package com.example.guest.apitest.ui;
+package com.example.guest.DMVBuddy.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,14 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.guest.apitest.R;
-import com.example.guest.apitest.adapters.RVAdapter;
-import com.example.guest.apitest.models.Dmv;
-import com.example.guest.apitest.services.GooglePlacesService;
+import com.example.guest.DMVBuddy.R;
+import com.example.guest.DMVBuddy.models.Dmv;
+import com.example.guest.DMVBuddy.services.GooglePlacesService;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.parceler.Parcels;
 
 import java.io.IOException;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,13 +34,17 @@ import okhttp3.Response;
 
 
 public class UpdateDmvFragment extends Fragment implements View.OnClickListener{
+    public final String TAG = this.getClass().getSimpleName();
     @Bind(R.id.name) TextView mName;
     @Bind(R.id.address) TextView mAddress;
     @Bind(R.id.travel) TextView mTravel;
+    @Bind(R.id.lastPulledUpdate) TextView mLastpulled;
+    @Bind(R.id.lastServedUpdate) TextView mLastServed;
 
     private Dmv mDmv;
     private String mOrigin;
     private String[] mTravelInfo;
+    private DatabaseReference mDmvDatabase;
 
     public static UpdateDmvFragment newInstance(Dmv dmv, String origin) {
         UpdateDmvFragment updateDmvFragment = new UpdateDmvFragment();
@@ -90,6 +100,25 @@ public class UpdateDmvFragment extends Fragment implements View.OnClickListener{
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        mDmvDatabase = FirebaseDatabase.getInstance().getReference("dmvs");
+                        Query queryRef = mDmvDatabase.child(mDmv.getId());
+
+                        queryRef.addListenerForSingleValueEvent(
+                                new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Dmv dmv = dataSnapshot.getValue(Dmv.class);
+//                                        mLastpulled
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                                    }
+                                });
+
+
 
                         mName.setText(mDmv.getName());
                         mAddress.setText(mDmv.getVicinity());

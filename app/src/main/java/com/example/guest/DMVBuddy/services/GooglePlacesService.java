@@ -1,14 +1,13 @@
-package com.example.guest.apitest.services;
+package com.example.guest.DMVBuddy.services;
 
 /**
  * Created by Guest on 6/29/16.
  */
+
 import android.util.Log;
 
-import com.example.guest.apitest.Constants;
-import com.example.guest.apitest.adapters.RVAdapter;
-import com.example.guest.apitest.models.Dmv;
-import com.example.guest.apitest.ui.MainActivity;
+import com.example.guest.DMVBuddy.Constants;
+import com.example.guest.DMVBuddy.models.Dmv;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +15,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -25,6 +33,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class GooglePlacesService {
+    public final String TAG = this.getClass().getSimpleName();
+    private DatabaseReference mDatabase;
+    private DatabaseReference mDmvDatabase;
     public static void findDmvs(String longitude, String latitude, Callback callback) {
 
         OkHttpClient client = new OkHttpClient.Builder()
@@ -87,7 +98,9 @@ public class GooglePlacesService {
     }
 
     public ArrayList<Dmv> processResults(Response response) {
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         ArrayList<Dmv> dmvs = new ArrayList<>();
+        final Map<String, Object> childUpdates = new HashMap<>();
 
         try {
             String jsonData = response.body().string();
@@ -102,8 +115,34 @@ public class GooglePlacesService {
                     String lat = dmvJSON.getJSONObject("geometry").getJSONObject("location").getString("lat");
                     String lng = dmvJSON.getJSONObject("geometry").getJSONObject("location").getString("lng");
                     String location = lat + "," + lng;
+                    String id = dmvJSON.getString("id");
                     if(name.contains("DMV") || name.contains("Department of Motor Vehicles")){
-                        Dmv dmv = new Dmv(name, rating,  vicinity, location);
+                        final Dmv dmv = new Dmv(name, rating,  vicinity, location, id, "0", "0", "N/A", "N/A");
+
+                        mDmvDatabase = FirebaseDatabase.getInstance().getReference("dmvs");
+                        Query queryRef = mDmvDatabase.child(dmv.getId());
+
+                        queryRef.addListenerForSingleValueEvent(
+                                new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Dmv dmvtest = dataSnapshot.getValue(Dmv.class);
+                                        if(dmvtest == null){
+                                            Log.d(TAG, "onDataChange: " +dmv.getId());
+                                            Map<String, Object> dmvValues = dmv.toMap();
+                                            childUpdates.put("/dmvs/" + dmv.getId(), dmvValues);
+                                            mDatabase.updateChildren(childUpdates);
+                                        }
+
+                                        // ...
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                                    }
+                                });
+
                         dmvs.add(dmv);
                     }
 
@@ -114,6 +153,7 @@ public class GooglePlacesService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         return dmvs;
     }
 }

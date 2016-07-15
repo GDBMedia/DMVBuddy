@@ -1,15 +1,12 @@
-package com.example.guest.apitest.ui;
+package com.example.guest.DMVBuddy.ui;
 
-import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.widget.TextView;
 
-import com.example.guest.apitest.R;
-import com.example.guest.apitest.adapters.DmvPagerAdapter;
-import com.example.guest.apitest.models.Dmv;
+import com.example.guest.DMVBuddy.R;
+import com.example.guest.DMVBuddy.adapters.DmvPagerAdapter;
+import com.example.guest.DMVBuddy.models.Dmv;
 
 import org.parceler.Parcels;
 

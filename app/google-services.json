@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1045891946940",
+    "firebase_url": "https://savvy-surge-135723.firebaseio.com",
+    "project_id": "savvy-surge-135723",
+    "storage_bucket": "savvy-surge-135723.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045891946940:android:fa46d10303400480",
+        "android_client_info": {
+          "package_name": "com.example.guest.DMVBuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1045891946940-imdp0skpphuu9sspj8d49kefcdcr2tse.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.guest.DMVBuddy",
+            "certificate_hash": "6BBB8BEFB570A4BA186BEE4ADF2F2E3347F0364C"
+          }
+        },
+        {
+          "client_id": "1045891946940-2nco6tejf2irhp6r5h5vvc8nfbbies55.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5VYNmZWanTe0FZSmtdgQSH-t1rKfb-d4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1045891946940-2nco6tejf2irhp6r5h5vvc8nfbbies55.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

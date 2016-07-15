@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.guest.apitest">
+    package="com.example.guest.DMVBuddy">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -13,9 +13,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity" />
+        <activity android:name="com.example.guest.DMVBuddy.ui.MainActivity" />
         <activity
-            android:name=".ui.LoginActivity"
+            android:name="com.example.guest.DMVBuddy.ui.LoginActivity"
             android:theme="@style/LoginTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.UpdateDmv"
+        <activity android:name="com.example.guest.DMVBuddy.ui.UpdateDmv"
                   android:theme="@style/LoginTheme"></activity>
     </application>
 

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.guest.apitest.ui.UpdateDmvFragment">
+    tools:context="com.example.guest.DMVBuddy.ui.UpdateDmvFragment">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/primary_dark"
-            tools:context="com.example.guest.apitest.ui.UpdateDmv">
+            tools:context="com.example.guest.DMVBuddy.ui.UpdateDmv">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -49,12 +49,31 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/travel"
+                android:id="@+id/infoWrapper">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lastPulledUpdate"
+                    android:textStyle="italic"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lastServedUpdate"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/lastPulledUpdate"
+                    android:textStyle="italic"/>
+            </RelativeLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/pulledWrapper"
-                android:layout_below="@+id/travel"
+                android:layout_below="@+id/infoWrapper"
                 android:layout_centerVertical="true"
                 android:layout_marginTop="30dp"
                 android:layout_marginLeft="16dp"

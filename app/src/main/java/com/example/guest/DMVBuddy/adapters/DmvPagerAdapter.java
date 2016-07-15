@@ -1,12 +1,12 @@
-package com.example.guest.apitest.adapters;
+package com.example.guest.DMVBuddy.adapters;
 
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.guest.apitest.models.Dmv;
-import com.example.guest.apitest.ui.UpdateDmvFragment;
+import com.example.guest.DMVBuddy.models.Dmv;
+import com.example.guest.DMVBuddy.ui.UpdateDmvFragment;
 
 import java.util.ArrayList;
 

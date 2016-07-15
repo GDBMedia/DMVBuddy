@@ -33,12 +33,52 @@
             android:textSize="20sp"
             android:padding="8dp"
             />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dmv_rating"
+            android:id="@+id/infoWrapper"
+            android:padding="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/lastPulled"
+                android:textStyle="italic|bold"
+                android:textColor="@color/accent"
+                android:textSize="15sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/lastserved"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@+id/lastPulled"
+                android:textSize="15sp"
+                android:textStyle="italic|bold"
+                android:textColor="@color/primary_dark"/>
+            <TextView
+                android:layout_marginTop="9dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/updatedBy"
+                android:layout_below="@+id/lastPulled"
+                android:textStyle="italic"/>
+            <TextView
+                android:layout_marginTop="9dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/updatedAt"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@+id/updatedBy"
+                android:layout_below="@+id/lastPulled"
+                android:textStyle="italic"/>
+
+        </RelativeLayout>
 
         <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/dmv_vicinity"
-        android:layout_below="@+id/dmv_rating"
+        android:layout_below="@+id/infoWrapper"
         android:padding="8dp"
         android:textColor="@color/primary"
         />
