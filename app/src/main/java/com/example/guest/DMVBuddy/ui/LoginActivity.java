@@ -70,9 +70,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                mAuthProgressDialog.show();
+
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    mAuthProgressDialog.show();
                     mUsersReference = FirebaseDatabase.getInstance().getReference("users");
                     Query queryRef = mUsersReference.child(user.getUid());
 

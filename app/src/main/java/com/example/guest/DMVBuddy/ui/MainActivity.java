@@ -77,11 +77,16 @@ public class MainActivity extends Activity implements LocationListener {
     protected void onStart() {
         super.onStart();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            mLongitude = location.getLongitude()+"";
-            mLatitude = location.getLatitude()+"";
-            getDmvs(mLongitude, mLatitude);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 100, this);
+            try{
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                mLongitude = location.getLongitude()+"";
+                mLatitude = location.getLatitude()+"";
+                getDmvs(mLongitude, mLatitude);
+            }catch (NullPointerException e){
+                Log.d(TAG, "onStart: " +e);
+            }
+
             Log.d(TAG, "onStart: listening");
         }
 
