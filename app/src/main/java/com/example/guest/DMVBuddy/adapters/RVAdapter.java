@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.guest.DMVBuddy.R;
 import com.example.guest.DMVBuddy.models.Dmv;
+import com.example.guest.DMVBuddy.services.FormatDate;
 import com.example.guest.DMVBuddy.ui.UpdateDmv;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +27,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -55,16 +60,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DmvViewHolder> {
         DmvViewHolder dvh = new DmvViewHolder(v);
         return dvh;
     }
-    public void clear() {
-        mDmvs.clear();
-        notifyDataSetChanged();
-    }
 
-    // Add a list of items
-    public void addAll(ArrayList<Dmv> list) {
-        mDmvs.addAll(list);
-        notifyDataSetChanged();
-    }
 
     @Override
     public void onBindViewHolder(final DmvViewHolder dmvViewHolder, final int i) {
@@ -77,30 +73,44 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DmvViewHolder> {
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-                Log.d(TAG, "onChildAdded: " + snapshot.getValue());
                 Dmv dmv = snapshot.getValue(Dmv.class);
                 if(!dmv.getUpdatedBy().equals("N/A")){
+                    String formattedDate = FormatDate.formatDate(dmv.getUpdatedAt());
+                    dmvViewHolder.lastServed.setVisibility(View.VISIBLE);
+                    dmvViewHolder.updatedBy.setVisibility(View.VISIBLE);
+                    dmvViewHolder.updatedAt.setVisibility(View.VISIBLE);
                     dmvViewHolder.lastPulled.setText("Last Pulled: " + dmv.getLastPulled());
                     dmvViewHolder.lastServed.setText("Last Served: " + dmv.getLastServed());
                     dmvViewHolder.updatedBy.setText("Updated By: " + dmv.getUpdatedBy());
-                    dmvViewHolder.updatedAt.setText("at: " + dmv.getUpdatedAt());
+                    dmvViewHolder.updatedAt.setText("at: " + formattedDate);
                 }else{
                     dmvViewHolder.lastPulled.setText("Not Updated");
+                    dmvViewHolder.lastServed.setVisibility(View.GONE);
+                    dmvViewHolder.updatedBy.setVisibility(View.GONE);
+                    dmvViewHolder.updatedAt.setVisibility(View.GONE);
                 }
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG, "onChildChanged: " +dataSnapshot.getValue());
                 Dmv dmv = dataSnapshot.getValue(Dmv.class);
                 if(!dmv.getUpdatedBy().equals("N/A")){
+
+                    String formattedDate = FormatDate.formatDate(dmv.getUpdatedAt());
+
+                    dmvViewHolder.lastServed.setVisibility(View.VISIBLE);
+                    dmvViewHolder.updatedBy.setVisibility(View.VISIBLE);
+                    dmvViewHolder.updatedAt.setVisibility(View.VISIBLE);
                     dmvViewHolder.lastPulled.setText("Last Pulled: " + dmv.getLastPulled());
                     dmvViewHolder.lastServed.setText("Last Served: " + dmv.getLastServed());
                     dmvViewHolder.updatedBy.setText("Updated By: " + dmv.getUpdatedBy());
-                    dmvViewHolder.updatedAt.setText("at: " + dmv.getUpdatedAt());
+                    dmvViewHolder.updatedAt.setText("at: " + formattedDate);
                 }else{
                     dmvViewHolder.lastPulled.setText("Not Updated");
+                    dmvViewHolder.lastServed.setVisibility(View.GONE);
+                    dmvViewHolder.updatedBy.setVisibility(View.GONE);
+                    dmvViewHolder.updatedAt.setVisibility(View.GONE);
                 }
             }
 

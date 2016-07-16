@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,12 +20,6 @@ import com.example.guest.DMVBuddy.R;
 import com.example.guest.DMVBuddy.adapters.RVAdapter;
 import com.example.guest.DMVBuddy.models.Dmv;
 import com.example.guest.DMVBuddy.services.GooglePlacesService;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-
-import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,9 +32,8 @@ import okhttp3.Response;
 
 public class MainActivity extends Activity implements LocationListener {
 
-    public static final String TAG = MainActivity.class.getSimpleName();
+    public final String TAG = this.getClass().getSimpleName();
     public ArrayList<Dmv> mDmvs = new ArrayList<>();
-    private GoogleApiClient mGoogleApiClient;
     private final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
     @Bind(R.id.rv) RecyclerView rv;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
@@ -50,9 +42,6 @@ public class MainActivity extends Activity implements LocationListener {
     private String mOrigin;
     protected LocationManager locationManager;
     protected LocationListener locationListener;
-    String provider;
-    protected String latitude,longitude;
-    protected boolean gps_enabled,network_enabled;
 
 
     @Override
@@ -65,28 +54,16 @@ public class MainActivity extends Activity implements LocationListener {
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                    PERMISSION_ACCESS_COARSE_LOCATION);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, PERMISSION_ACCESS_COARSE_LOCATION);
         }
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
-//        if (mGoogleApiClient == null) {
-//            mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                    .addConnectionCallbacks(this)
-//                    .addOnConnectionFailedListener(this)
-//                    .addApi(LocationServices.API)
-//                    .build();
-//        }
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getDmvs(mLongitude, mLatitude);
             }
         });
-        // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -95,47 +72,27 @@ public class MainActivity extends Activity implements LocationListener {
 
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        mGoogleApiClient.connect();
-//
-//    }
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if (mGoogleApiClient.isConnected()) {
-//            mGoogleApiClient.disconnect();
-//        }
-//}
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            mLongitude = location.getLongitude()+"";
+            mLatitude = location.getLatitude()+"";
+            getDmvs(mLongitude, mLatitude);
+            Log.d(TAG, "onStart: listening");
+        }
 
-
-//    @Override
-//    public void onConnected(Bundle connectionHint) {
-//
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//
-//            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-//            if (location != null) {
-//                mLatitude = String.valueOf(location.getLatitude());
-//                mLongitude = String.valueOf(location.getLongitude());
-//                getDmvs(mLongitude, mLatitude);
-//
-//
-//            }else{
-//                mLatitude = "45.520606";
-//                mLongitude = "-122.707413";
-//                getDmvs(mLongitude, mLatitude);
-//            }
-//
-//        }
-//
-//    }
-//
-//    @Override
-//    public void onConnectionSuspended(int i) {
-//        Toast.makeText(this, "suspended", Toast.LENGTH_LONG).show();
-//    }
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "onStop: notListening");
+            locationManager.removeUpdates(this);
+        }
+    }
 
 
     private void getDmvs(String longitude, String latitude) {
@@ -200,11 +157,5 @@ public class MainActivity extends Activity implements LocationListener {
     public void onProviderDisabled(String s) {
 
     }
-
-//    @Override
-//    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-//        Toast.makeText(this, "failed", Toast.LENGTH_LONG).show();
-//
-//    }
 
 }

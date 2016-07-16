@@ -67,6 +67,17 @@
         android:layout_marginLeft="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="40dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/submit"
+        android:textColor="@color/icons"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:text="@string/don_t_have_an_account_sign_up_here"
+        android:id="@+id/registerTextView"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

@@ -25,7 +25,6 @@ public class Dmv {
     public String updatedBy;
 
 
-
     public String updatedAt;
 
     public Dmv() {}
@@ -42,6 +41,15 @@ public class Dmv {
         this.updatedBy = updatedBy;
         this.updatedAt = updatedAt;
     }
+
+    public Dmv(String id, String lastPulled, String lastServed, String updatedBy, String updatedAt) {
+        this.id = id;
+        this.lastPulled = lastPulled;
+        this.lastServed = lastServed;
+        this.updatedBy = updatedBy;
+        this.updatedAt = updatedAt;
+    }
+
 
 
 
