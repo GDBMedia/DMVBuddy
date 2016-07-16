@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.guest.DMVBuddy.Constants;
 import com.example.guest.DMVBuddy.R;
 import com.example.guest.DMVBuddy.adapters.DmvAdapter;
 import com.example.guest.DMVBuddy.adapters.RVAdapter;
@@ -77,7 +78,7 @@ public class MainActivity extends Activity implements LocationListener {
     protected void onStart() {
         super.onStart();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 100, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Constants.UPDATE_LENGTH, Constants.UPDATE_DISTANCE, this);
             try{
                 Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 mLongitude = location.getLongitude()+"";
@@ -85,6 +86,7 @@ public class MainActivity extends Activity implements LocationListener {
                 getDmvs(mLongitude, mLatitude);
             }catch (NullPointerException e){
                 Log.d(TAG, "onStart: " +e);
+                Toast.makeText(this, "Can't Get Location", Toast.LENGTH_SHORT).show();
             }
 
             Log.d(TAG, "onStart: listening");
