@@ -70,6 +70,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                mAuthProgressDialog.show();
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     mUsersReference = FirebaseDatabase.getInstance().getReference("users");
@@ -128,7 +129,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             mPassword.setError("Password cannot be blank");
             return;
         }
-        mAuthProgressDialog.show();
+
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
