@@ -2,6 +2,7 @@ package com.example.guest.DMVBuddy.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,14 @@ import android.widget.TextView;
 
 import com.example.guest.DMVBuddy.R;
 import com.example.guest.DMVBuddy.models.Dmv;
+import com.example.guest.DMVBuddy.services.FormatDate;
+import com.example.guest.DMVBuddy.ui.UpdateDmv;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import org.parceler.Parcels;
 
@@ -23,13 +32,16 @@ import butterknife.ButterKnife;
 /**
  * Created by Guest on 7/15/16.
  */
-public class DmvAdapter extends RecyclerView.Adapter<DmvAdapter.RestaurantViewHolder> {
+public class DmvAdapter extends RecyclerView.Adapter<DmvAdapter.DmvViewHolder> {
     private ArrayList<Dmv> mDmvs = new ArrayList<>();
     private Context mContext;
+    private String mOrigin;
+    private DatabaseReference mDmvDatabase;
 
-    public DmvAdapter(Context context, ArrayList<Dmv> dmvs) {
+    public DmvAdapter(Context context, ArrayList<Dmv> dmvs, String origin) {
         mContext = context;
         mDmvs = dmvs;
+        mOrigin = origin;
     }
 
     @Override
@@ -41,22 +53,23 @@ public class DmvAdapter extends RecyclerView.Adapter<DmvAdapter.RestaurantViewHo
 
     @Override
     public void onBindViewHolder(DmvAdapter.DmvViewHolder holder, int position) {
-        holder.bindRestaurant(mDmvs.get(position));
+        holder.bindDmv(mDmvs.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mRestaurants.size();
+        return mDmvs.size();
     }
 
     public class DmvViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @Bind(R.id.restaurantImageView)
-        ImageView mRestaurantImageView;
-        @Bind(R.id.restaurantNameTextView)
-        TextView mNameTextView;
-        @Bind(R.id.categoryTextView) TextView mCategoryTextView;
-        @Bind(R.id.ratingTextView) TextView mRatingTextView;
-
+        @Bind(R.id.cv) CardView cv;
+        @Bind(R.id.dmv_name) TextView dmvName;
+        @Bind(R.id.dmv_rating) TextView dmvRating;
+        @Bind(R.id.dmv_vicinity) TextView dmvVicinity;
+        @Bind(R.id.lastPulled) TextView lastPulled;
+        @Bind(R.id.lastserved) TextView lastServed;
+        @Bind(R.id.updatedBy) TextView updatedBy;
+        @Bind(R.id.updatedAt) TextView updatedAt;
         private Context mContext;
 
         public DmvViewHolder(View itemView) {
@@ -67,20 +80,82 @@ public class DmvAdapter extends RecyclerView.Adapter<DmvAdapter.RestaurantViewHo
             itemView.setOnClickListener(this);
         }
 
-        public void bindDmv(Restaurant restaurant) {
-            Picasso.with(mContext).load(restaurant.getImageUrl()).into(mRestaurantImageView);
-            mNameTextView.setText(restaurant.getName());
-            mCategoryTextView.setText(restaurant.getCategories().get(0));
-            mRatingTextView.setText("Rating: " + restaurant.getRating() + "/5");
+        public void bindDmv(Dmv dmv) {
+            dmvName.setText(dmv.getName());
+            dmvRating.setText("Rating: " + Double.toString(dmv.getRating()));
+            dmvVicinity.setText(dmv.getVicinity());
+            mDmvDatabase = FirebaseDatabase.getInstance().getReference("dmvs");
+            Query queryRef = mDmvDatabase.orderByKey().equalTo(dmv.getId());
+            queryRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot snapshot, String previousChild) {
+                    Dmv dmv = snapshot.getValue(Dmv.class);
+                    if(!dmv.getUpdatedBy().equals("N/A")){
+                        String formattedDate = FormatDate.formatDate(dmv.getUpdatedAt());
+                        lastServed.setVisibility(View.VISIBLE);
+                        updatedBy.setVisibility(View.VISIBLE);
+                        updatedAt.setVisibility(View.VISIBLE);
+                        lastPulled.setText("Last Pulled: " + dmv.getLastPulled());
+                        lastServed.setText("Last Served: " + dmv.getLastServed());
+                        updatedBy.setText("Updated By: " + dmv.getUpdatedBy());
+                        updatedAt.setText("at: " + formattedDate);
+                    }else{
+                        lastPulled.setText("Not Updated");
+                        lastServed.setVisibility(View.GONE);
+                        updatedBy.setVisibility(View.GONE);
+                        updatedAt.setVisibility(View.GONE);
+                    }
+
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    Dmv dmv = dataSnapshot.getValue(Dmv.class);
+                    if(!dmv.getUpdatedBy().equals("N/A")){
+
+                        String formattedDate = FormatDate.formatDate(dmv.getUpdatedAt());
+
+                        lastServed.setVisibility(View.VISIBLE);
+                        updatedBy.setVisibility(View.VISIBLE);
+                        updatedAt.setVisibility(View.VISIBLE);
+                        lastPulled.setText("Last Pulled: " + dmv.getLastPulled());
+                        lastServed.setText("Last Served: " + dmv.getLastServed());
+                        updatedBy.setText("Updated By: " + dmv.getUpdatedBy());
+                        updatedAt.setText("at: " + formattedDate);
+                    }else{
+                        lastPulled.setText("Not Updated");
+                        lastServed.setVisibility(View.GONE);
+                        updatedBy.setVisibility(View.GONE);
+                        updatedAt.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+
+                }
+            });
+
         }
 
         @Override
         public void onClick(View v) {
-            Log.d("click listener", "working!");
             int itemPosition = getLayoutPosition();
-            Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
+            Intent intent = new Intent(v.getContext(), UpdateDmv.class);
             intent.putExtra("position", itemPosition + "");
-            intent.putExtra("restaurants", Parcels.wrap(mRestaurants));
+            intent.putExtra("dmvs", Parcels.wrap(mDmvs));
+            intent.putExtra("origin", mOrigin);
             mContext.startActivity(intent);
         }
     }

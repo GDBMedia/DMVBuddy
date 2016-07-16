@@ -17,6 +17,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.guest.DMVBuddy.R;
+import com.example.guest.DMVBuddy.adapters.DmvAdapter;
 import com.example.guest.DMVBuddy.adapters.RVAdapter;
 import com.example.guest.DMVBuddy.models.Dmv;
 import com.example.guest.DMVBuddy.services.GooglePlacesService;
@@ -112,7 +113,7 @@ public class MainActivity extends Activity implements LocationListener {
                     @Override
                     public void run() {
 
-                        RVAdapter adapter = new RVAdapter(MainActivity.this, mDmvs, mOrigin);
+                        DmvAdapter adapter = new DmvAdapter(MainActivity.this, mDmvs, mOrigin);
                         rv.setAdapter(adapter);
                         swipeContainer.setRefreshing(false);
 
