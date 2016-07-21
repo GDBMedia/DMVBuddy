@@ -12,7 +12,7 @@ public class FormatDate {
 
     public static String formatDate(String date){
         String formattedDate = date;
-        if(!date.equals("N/A")){
+        try{
             SimpleDateFormat sdfSource = new SimpleDateFormat("EEE MMM d hh:mm:ss z yyyy");
             Date newdate = null;
             try {
@@ -31,6 +31,8 @@ public class FormatDate {
                 formattedDate = new SimpleDateFormat("MMMM d, h:m a").format(newdate);
             }
 
+        }catch(NullPointerException e){
+           e.printStackTrace();
         }
 
         return formattedDate;

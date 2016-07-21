@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, PERMISSION_ACCESS_COARSE_LOCATION);
+            getLocation();
         }
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -78,6 +79,24 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
+
+    }
+
+    private void getLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Constants.UPDATE_LENGTH, Constants.UPDATE_DISTANCE, this);
+            try{
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                mLongitude = location.getLongitude()+"";
+                mLatitude = location.getLatitude()+"";
+                getDmvs(mLongitude, mLatitude);
+            }catch (NullPointerException e){
+                Log.d(TAG, "onStart: " +e);
+                Toast.makeText(this, "Can't Get Location", Toast.LENGTH_SHORT).show();
+            }
+
+            Log.d(TAG, "onStart: listening");
+        }
 
     }
 
@@ -109,20 +128,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     protected void onStart() {
         super.onStart();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Constants.UPDATE_LENGTH, Constants.UPDATE_DISTANCE, this);
-            try{
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                mLongitude = location.getLongitude()+"";
-                mLatitude = location.getLatitude()+"";
-                getDmvs(mLongitude, mLatitude);
-            }catch (NullPointerException e){
-                Log.d(TAG, "onStart: " +e);
-                Toast.makeText(this, "Can't Get Location", Toast.LENGTH_SHORT).show();
-            }
-
-            Log.d(TAG, "onStart: listening");
-        }
+        getLocation();
 
     }
     @Override
