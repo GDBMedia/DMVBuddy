@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 /**
  * Created by Guest on 7/15/16.
@@ -84,6 +87,8 @@ public class DmvAdapter extends RecyclerView.Adapter<DmvAdapter.DmvViewHolder> {
             dmvName.setText(dmv.getName());
             dmvRating.setText("Rating: " + Double.toString(dmv.getRating()));
             dmvVicinity.setText(dmv.getVicinity());
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.item_animate);
+            itemView.startAnimation(animation);
             mDmvDatabase = FirebaseDatabase.getInstance().getReference("dmvs");
             Query queryRef = mDmvDatabase.orderByKey().equalTo(dmv.getId());
             queryRef.addChildEventListener(new ChildEventListener() {

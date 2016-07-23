@@ -14,12 +14,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Toast;
 
 import com.example.guest.DMVBuddy.Constants;
@@ -35,6 +37,11 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -59,9 +66,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        rv.setLayoutManager(llm);
-        rv.setHasFixedSize(true);
+
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, PERMISSION_ACCESS_COARSE_LOCATION);
@@ -83,20 +88,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     private void getLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Constants.UPDATE_LENGTH, Constants.UPDATE_DISTANCE, this);
-            try{
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                mLongitude = location.getLongitude()+"";
-                mLatitude = location.getLatitude()+"";
-                getDmvs(mLongitude, mLatitude);
-            }catch (NullPointerException e){
-                Log.d(TAG, "onStart: " +e);
-                Toast.makeText(this, "Can't Get Location", Toast.LENGTH_SHORT).show();
-            }
 
-            Log.d(TAG, "onStart: listening");
-        }
 
     }
 
@@ -128,7 +120,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     protected void onStart() {
         super.onStart();
-        getLocation();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Constants.UPDATE_LENGTH, Constants.UPDATE_DISTANCE, this);
+            try{
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                mLongitude = location.getLongitude()+"";
+                mLatitude = location.getLatitude()+"";
+                getDmvs(mLongitude, mLatitude);
+            }catch (NullPointerException e){
+                Log.d(TAG, "onStart: " +e);
+                Toast.makeText(this, "Can't Get Location", Toast.LENGTH_SHORT).show();
+            }
+
+            Log.d(TAG, "onStart: listening");
+        }
 
     }
     @Override
@@ -154,9 +159,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             public void onResponse(Call call, Response response){
                 mOrigin = mLatitude + "," +  mLongitude;
                 mDmvs = googlePlacesService.processResults(response);
+                Log.d(TAG, "onResponse: " + mDmvs.size());
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
+
+                        rv.setLayoutManager(llm);
+                        rv.setHasFixedSize(true);
+                        rv.setItemAnimator(new FadeInAnimator());
 
                         DmvAdapter adapter = new DmvAdapter(MainActivity.this, mDmvs, mOrigin);
                         rv.setAdapter(adapter);
@@ -186,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public void onLocationChanged(Location location) {
        mLatitude = location.getLatitude()+"";
         mLongitude = location.getLongitude()+"";
+        Log.d(TAG, "onLocationChanged: " + mLatitude + "," + mLongitude);
         getDmvs(mLongitude, mLatitude);
     }
 
