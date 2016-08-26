@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Bind(R.id.username) EditText mEmail;
     @Bind(R.id.password) EditText mPassword;
     @Bind(R.id.registerTextView) TextView mRegisterTextView;
+    @Bind(R.id.title) TextView mTitleTextView;
 
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
@@ -57,6 +59,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        Typeface adam = Typeface.createFromAsset(getAssets(), "fonts/adam.otf");
+        mTitleTextView.setTypeface(adam);
+        mSubmit.setTypeface(adam);
+        mEmail.setTypeface(adam);
+        mPassword.setTypeface(adam);
+        mRegisterTextView.setTypeface(adam);
+
 
         mSubmit.setOnClickListener(this);
         mRegisterTextView.setOnClickListener(this);

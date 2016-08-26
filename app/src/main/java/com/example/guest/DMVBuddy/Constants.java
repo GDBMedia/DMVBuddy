@@ -16,6 +16,6 @@ public class Constants {
     public static final String KEY = BuildConfig.KEY;;
     public static final String KEYP = "key";
     public static final int UPDATE_LENGTH = 300000;
-    public static final int UPDATE_DISTANCE = 15;
+    public static final int UPDATE_DISTANCE = 100;
 
 }

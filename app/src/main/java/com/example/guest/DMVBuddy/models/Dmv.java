@@ -15,7 +15,7 @@ import java.util.Map;
 @Parcel
 public class Dmv {
 
-    public String name;
+    private String name;
     public double rating;
     public String vicinity;
     public String location;

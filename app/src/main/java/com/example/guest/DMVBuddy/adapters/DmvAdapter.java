@@ -2,6 +2,7 @@ package com.example.guest.DMVBuddy.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,6 +41,7 @@ public class DmvAdapter extends RecyclerView.Adapter<DmvAdapter.DmvViewHolder> {
     private Context mContext;
     private String mOrigin;
     private DatabaseReference mDmvDatabase;
+    private int lastPosition = -1;
 
     public DmvAdapter(Context context, ArrayList<Dmv> dmvs, String origin) {
         mContext = context;
@@ -57,6 +59,16 @@ public class DmvAdapter extends RecyclerView.Adapter<DmvAdapter.DmvViewHolder> {
     @Override
     public void onBindViewHolder(DmvAdapter.DmvViewHolder holder, int position) {
         holder.bindDmv(mDmvs.get(position));
+        setAnimation(holder.cv, position);
+    }
+
+    private void setAnimation(CardView cv, int position) {
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.item_animate);
+            cv.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
     @Override
@@ -84,11 +96,14 @@ public class DmvAdapter extends RecyclerView.Adapter<DmvAdapter.DmvViewHolder> {
         }
 
         public void bindDmv(Dmv dmv) {
+            Typeface adam = Typeface.createFromAsset(mContext.getAssets(), "fonts/adam.otf");
+            dmvName.setTypeface(adam);
+
             dmvName.setText(dmv.getName());
             dmvRating.setText("Rating: " + Double.toString(dmv.getRating()));
             dmvVicinity.setText(dmv.getVicinity());
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.item_animate);
-            itemView.startAnimation(animation);
+//            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.item_animate);
+//            itemView.startAnimation(animation);
             mDmvDatabase = FirebaseDatabase.getInstance().getReference("dmvs");
             Query queryRef = mDmvDatabase.orderByKey().equalTo(dmv.getId());
             queryRef.addChildEventListener(new ChildEventListener() {

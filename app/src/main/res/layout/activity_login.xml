@@ -6,15 +6,7 @@
     android:background="@color/primary_dark"
     tools:context=".ui.LoginActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textColor="@color/primary_light"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textSize="65sp"
-        android:layout_marginTop="20dp"/>
+
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -78,6 +70,17 @@
         android:text="@string/don_t_have_an_account_sign_up_here"
         android:id="@+id/registerTextView"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:id="@+id/title"
+        android:textColor="@color/primary_light"
+        android:layout_above="@+id/usernameWrapper"
+        android:layout_centerHorizontal="true"
+        android:textSize="65sp"
+        android:layout_marginBottom="60dp"/>
 
 
 </RelativeLayout>

@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, PERMISSION_ACCESS_COARSE_LOCATION);
-            getLocation();
         }
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -83,11 +82,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-
-    }
-
-    private void getLocation() {
 
 
     }
@@ -168,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
                         rv.setLayoutManager(llm);
                         rv.setHasFixedSize(true);
-                        rv.setItemAnimator(new FadeInAnimator());
+//                        rv.setItemAnimator(new FadeInAnimator());
 
                         DmvAdapter adapter = new DmvAdapter(MainActivity.this, mDmvs, mOrigin);
                         rv.setAdapter(adapter);

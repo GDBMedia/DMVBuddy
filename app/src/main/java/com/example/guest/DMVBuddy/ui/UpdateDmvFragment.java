@@ -2,6 +2,7 @@ package com.example.guest.DMVBuddy.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -117,6 +118,12 @@ public class UpdateDmvFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_update_dmv, container, false);
         ButterKnife.bind(this, view);
+
+        Typeface adam = Typeface.createFromAsset(getActivity().getAssets(), "fonts/adam.otf");
+        mName.setTypeface(adam);
+        mSubmit.setTypeface(adam);
+        mPulled.setTypeface(adam);
+        mServing.setTypeface(adam);
 
         getTravelInfo();
 

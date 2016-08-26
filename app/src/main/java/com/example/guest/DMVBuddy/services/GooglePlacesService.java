@@ -116,7 +116,7 @@ public class GooglePlacesService {
                     String lng = dmvJSON.getJSONObject("geometry").getJSONObject("location").getString("lng");
                     String location = lat + "," + lng;
                     String id = dmvJSON.getString("id");
-                    if(name.contains("DMV") || name.contains("Department of Motor Vehicles")){
+                    if(name.toLowerCase().contains("dmv") || name.toLowerCase().contains("department of motor vehicles") || name.toLowerCase().contains("motor vehicles division")){
                         final Dmv dmv = new Dmv(name, rating,  vicinity, location, id, "0", "0", "N/A", "N/A");
 
                         mDmvDatabase = FirebaseDatabase.getInstance().getReference("dmvs");

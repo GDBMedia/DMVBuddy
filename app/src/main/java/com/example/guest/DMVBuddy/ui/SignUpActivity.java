@@ -3,6 +3,7 @@ package com.example.guest.DMVBuddy.ui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +45,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @Bind(R.id.passwordEditText) EditText mPasswordEditText;
     @Bind(R.id.confirmPasswordEditText) EditText mConfirmPasswordEditText;
     @Bind(R.id.loginTextView) TextView mLoginTextView;
+    @Bind(R.id.title) TextView mTitleTextView;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -57,10 +59,22 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
         ButterKnife.bind(this);
+
+        Typeface adam = Typeface.createFromAsset(getAssets(), "fonts/adam.otf");
+        mTitleTextView.setTypeface(adam);
+        mCreateUserButton.setTypeface(adam);
+        mNameEditText.setTypeface(adam);
+        mUsernameEditText.setTypeface(adam);
+        mEmailEditText.setTypeface(adam);
+        mPasswordEditText.setTypeface(adam);
+        mConfirmPasswordEditText.setTypeface(adam);
+        mLoginTextView.setTypeface(adam);
+
         mLoginTextView.setOnClickListener(this);
         mCreateUserButton.setOnClickListener(this);
 
