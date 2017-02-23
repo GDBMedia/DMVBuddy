@@ -15,6 +15,7 @@ You will need the following programs installed on your computer.
 * Android SDK
 
 ### To Run
+* Either download the APK here: https://drive.google.com/file/d/0B34jXo6sWpgzMlRmOGkxSEpyU0U/view?usp=sharing or follow the steps
 * In a terminal window, navigate to ~/AndroidStudioProjects
 * Run `git clone https://github.com/GDBMedia/DMVBuddy`
 * Open Android Studio and open app.
